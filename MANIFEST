@@ -1,9 +1,8 @@
 Build.PL
 Changes
 lib/NGS/Tools/Pindel.pm
+lib/NGS/Tools/Pindel/Role.pm
 MANIFEST			This list of files
 README
-t/00-load.t
-t/manifest.t
-t/pod-coverage.t
-t/pod.t
+t/01-run_pindel_role.t
+Makefile.PL
