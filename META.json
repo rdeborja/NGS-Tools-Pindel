@@ -1,0 +1,57 @@
+{
+   "abstract" : "NGS::Tools::Pindel Perl wrapper",
+   "author" : [
+      "Richard de Borja <richard.deborja@sickkids.ca>"
+   ],
+   "dynamic_config" : 1,
+   "generated_by" : "Module::Build version 0.4205",
+   "license" : [
+      "artistic_2"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : "2"
+   },
+   "name" : "NGS-Tools-Pindel",
+   "prereqs" : {
+      "build" : {
+         "requires" : {
+            "FindBin" : "0",
+            "MooseX::ClassCompositor" : "0",
+            "Test::Exception" : "0",
+            "Test::Files" : "0",
+            "Test::Moose" : "0",
+            "Test::More" : "0"
+         }
+      },
+      "configure" : {
+         "requires" : {
+            "Module::Build" : "0"
+         }
+      },
+      "runtime" : {
+         "requires" : {
+            "Moose::Role" : "0",
+            "MooseX::Params::Validate" : "0",
+            "autodie" : "0",
+            "namespace::autoclean" : "0"
+         }
+      }
+   },
+   "provides" : {
+      "NGS::Tools::Pindel" : {
+         "file" : "lib/NGS/Tools/Pindel.pm",
+         "version" : "0.01"
+      },
+      "NGS::Tools::Pindel::Role" : {
+         "file" : "lib/NGS/Tools/Pindel/Role.pm"
+      }
+   },
+   "release_status" : "stable",
+   "resources" : {
+      "license" : [
+         "http://www.perlfoundation.org/artistic_license_2_0"
+      ]
+   },
+   "version" : "0.01"
+}

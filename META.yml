@@ -1,0 +1,35 @@
+---
+abstract: 'NGS::Tools::Pindel Perl wrapper'
+author:
+  - 'Richard de Borja <richard.deborja@sickkids.ca>'
+build_requires:
+  FindBin: 0
+  MooseX::ClassCompositor: 0
+  Test::Exception: 0
+  Test::Files: 0
+  Test::Moose: 0
+  Test::More: 0
+configure_requires:
+  Module::Build: 0
+dynamic_config: 1
+generated_by: 'Module::Build version 0.4205, CPAN::Meta::Converter version 2.120921'
+license: artistic_2
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
+name: NGS-Tools-Pindel
+provides:
+  NGS::Tools::Pindel:
+    file: lib/NGS/Tools/Pindel.pm
+    version: 0.01
+  NGS::Tools::Pindel::Role:
+    file: lib/NGS/Tools/Pindel/Role.pm
+    version: 0
+requires:
+  Moose::Role: 0
+  MooseX::Params::Validate: 0
+  autodie: 0
+  namespace::autoclean: 0
+resources:
+  license: http://www.perlfoundation.org/artistic_license_2_0
+version: 0.01
