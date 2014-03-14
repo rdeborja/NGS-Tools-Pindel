@@ -8,7 +8,16 @@ WriteMakefile
   'EXE_FILES' => [],
   'VERSION_FROM' => 'lib/NGS/Tools/Pindel.pm',
   'PREREQ_PM' => {
-                   'Test::More' => 0
+                   'Moose::Role' => 0,
+                   'namespace::autoclean' => 0,
+                   'Test::Exception' => 0,
+                   'FindBin' => 0,
+                   'Test::More' => 0,
+                   'Test::Moose' => 0,
+                   'autodie' => 0,
+                   'MooseX::Params::Validate' => 0,
+                   'Test::Files' => 0,
+                   'MooseX::ClassCompositor' => 0
                  }
 )
 ;

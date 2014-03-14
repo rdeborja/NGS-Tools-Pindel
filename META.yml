@@ -21,9 +21,12 @@ name: NGS-Tools-Pindel
 provides:
   NGS::Tools::Pindel:
     file: lib/NGS/Tools/Pindel.pm
-    version: 0.01
+    version: 0.02
   NGS::Tools::Pindel::Role:
     file: lib/NGS/Tools/Pindel/Role.pm
+    version: 0
+  NGS::Tools::Pindel::Role::PindelParser:
+    file: lib/NGS/Tools/Pindel/Role/PindelParser.pm
     version: 0
 requires:
   Moose::Role: 0
@@ -32,4 +35,4 @@ requires:
   namespace::autoclean: 0
 resources:
   license: http://www.perlfoundation.org/artistic_license_2_0
-version: 0.01
+version: 0.02

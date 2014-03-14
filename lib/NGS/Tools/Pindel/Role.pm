@@ -108,9 +108,19 @@ Convert the output from a Pindel run to a VCF file.
 
 =over 2
 
-=item * input: Name of Pindel file to process
+=item * pindel_file: Name of Pindel file to process (required)
 
-=item * vcf: Name of output VCF file
+=item * vcf: Name of output VCF file (default: none)
+
+=item * reference: FASTA reference genome (default: hg19.fa)
+
+=item * reference_name: formal name of reference genome defined in "referemce" (default: GRCh37)
+
+=item * reference_date: Release date of reference genome defined in "reference" (default: 200902)
+
+=item * chromosome: Name of chromosome to be processed, if none is provided all the chromosomes will be processed
+
+=item * pindel2vcf: full path to the pindel2vcf program (default: pindel2vcf, assumes pindel2vcf is in the path)
 
 =back
 
@@ -120,22 +130,81 @@ sub convert_pindel_output_to_vcf {
 	my $self = shift;
 	my %args = validated_hash(
 		\@_,
-		input => {
+		pindel_file => {
 			isa         => 'Str',
-			required    => 0,
-			default     => ''
+			required    => 1
 			},
 		vcf => {
 			isa			=> 'Str',
 			required	=> 0,
 			default		=> ''
+			},
+		reference => {
+			isa			=> 'Str',
+			required	=> 0,
+			default		=> '/hpf/largeprojects/adam/ref_data/homosapiens/ucsc/GRCh37/fasta/genome.fa'
+			},
+		reference_name => {
+			isa			=> 'Str',
+			required	=> 0,
+			default		=> 'GRCh37'
+			},
+		reference_date => {
+			isa			=> 'Str',
+			required	=> 0,
+			default		=> '200902'
+			},
+		chromosome => {
+			isa			=> 'Str',
+			required	=> 0,
+			default		=> ''
+			},
+		pindel2vcf => {
+			isa			=> 'Str',
+			required	=> 0,
+			default		=> 'pindel2vcf'
 			}
 		);
 
-	
+	my $output;
+	my $params = join(' ',
+		'--pindel_output', $args{'pindel_file'},
+		'--reference', $args{'reference'},
+		'--reference_name', $args{'reference_name'},
+		'--reference_date', $args{'reference_date'}
+		);
+
+	# if there is no vcf output file provided, Pindel appends '.vcf' to the input file provided
+	if ('' ne $args{'vcf'}) {
+		$params = join(' ',
+			'--vcf',
+			$args{'vcf'}
+			);
+		$output = $args{'vcf'};
+		}
+	else {
+		$output = join('.',
+			$args{'pindel_file'},
+			'vcf'
+			);
+		}
+
+	# if there is no chromosome, Pindel will process all chromosomes
+	if ('' ne $args{'chromosome'}) {
+		$params = join(' ',
+			'--chromosome',
+			$args{'chromosome'}
+			);
+		}
+
+	my $cmd = join(' ',
+		$args{'pindel2vcf'},
+		$params
+		);
 
 	my %return_values = (
-
+		cmd => $cmd,
+		output => $output
 		);
 
 	return(\%return_values);

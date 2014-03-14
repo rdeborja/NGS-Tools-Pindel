@@ -1,5 +1,9 @@
 Revision history for NGS-Tools-Pindel
 
-0.01    Date/time
-        First version, released on an unsuspecting world.
+0.01    2014-03-11
+        Initial version of the Pindel Perl API.
+
+0.02    2014-03-13
+        Added Pindel deletion and small insertion file parser and converter
+        to a tabular format for handling in R.
 

@@ -2,7 +2,16 @@ Build.PL
 Changes
 lib/NGS/Tools/Pindel.pm
 lib/NGS/Tools/Pindel/Role.pm
-MANIFEST			This list of files
-README
-t/01-run_pindel_role.t
+lib/NGS/Tools/Pindel/Role/PindelParser.pm
 Makefile.PL
+MANIFEST			This list of files
+META.json
+META.yml
+README
+bin/convert_pindel_to_table.pl
+t/01-run_pindel_role.t
+t/02-pindel2vcf.t
+t/03-pindel_parser.t
+t/example/03-expected_tab_file.txt
+t/example/example_D
+t/example/example_SI
