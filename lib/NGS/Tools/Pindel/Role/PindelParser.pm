@@ -105,7 +105,7 @@ sub parse_pindel_output {
 			required	=> 1
 			}
 		);
-	my $output_fh = $args{'output'};
+	my $ofh = $args{'output'};
 	open(my $fh, '<', $args{'file'});
 	while(my $line = <$fh>) {
 		$line =~ s/^\s+//;
@@ -163,7 +163,7 @@ sub parse_pindel_output {
 				}
 			$self->_print_tabular_pindel_output(
 				data => \%pindel_table,
-				output => $output_fh
+				output => $ofh
 				);
 			}
 		}

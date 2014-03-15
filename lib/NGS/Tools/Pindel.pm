@@ -56,47 +56,6 @@ sub BUILD {
 	my $args = shift;
 	}
 
-=head2 $obj->pindel_pipeline()
-
-A method to run the entire Pindel pipeline.
-
-=head3 Arguments:
-
-=over 2
-
-=item * arg: argument
-
-=back
-
-=cut
-
-sub pindel_pipeline {
-	my $self = shift;
-	my %args = validated_hash(
-		\@_,
-		arg => {
-			isa         => 'Str',
-			required    => 0,
-			default     => ''
-			}
-		);
-
-	# step 1 is to run the insert size metrics
-
-	# convert the insert size metric report to a Pindel config file
-
-	# run Pindel
-
-	# convert the Pindel output to a tabular file
-
-	my %return_values = (
-
-		);
-
-	return(\%return_values);
-	}
-
-
 =head1 AUTHOR
 
 Richard de Borja, C<< <richard.deborja at sickkids.ca> >>
