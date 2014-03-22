@@ -1,4 +1,4 @@
-package NGS::Tools::Pindel::Role;
+package NGS::Tools::Pindel::Role::Postprocessing;
 use Moose::Role;
 use MooseX::Params::Validate;
 
@@ -6,208 +6,191 @@ use strict;
 use warnings FATAL => 'all';
 use namespace::autoclean;
 use autodie;
+use File::Slurp;
 
 =head1 NAME
 
-NGS::Tools::Pindel::Role
+NGS::Tools::Pindel::Role::PindelPostprocessing
 
 =head1 SYNOPSIS
 
-A Perl Moose Role to wrap Pindel
+A Perl Moose role for postprocessing Pindel tabular output.
 
 =head1 ATTRIBUTES AND DELEGATES
 
+=cut
+
+our %pindel_tab = (
+	PINDEL_ID => 0,
+	VARIANT_TYPE => 1,
+	VARIANT_LENGTH => 2,
+	CHR => 3, 
+	START => 4, 
+	END => 5,
+	RANGE_START => 6,
+	RANGE_END => 7,
+	S1_SCORE => 8,
+	BASES => 9, 
+	SUM_MS => 10,
+	SV_SUPPORT_READS => 11,
+	SV_UNIQUE_SUPPORT_READS => 12
+	);
+
 =head1 SUBROUTINES/METHODS
 
-=head2 $obj->run_pindel()
+=head2 $obj->call_pindel_somatic()
 
-Run the Pindel INDEL caller.
+After Pindel has been used on a tumour and its matched normal and the output files
+have been converted to the tabular format, remove any germline indels from the
+tumour.
 
 =head3 Arguments:
 
 =over 2
 
-=item * fasta: Reference file in FASTA format.
+=item * tumour: Pindel tabular file for the tumour
 
-=item * bam_config: BAM configuration file, contains BAM file, expected insert size and label
+=item * normal: Pindel tabular file for the matched normal
 
-=item * chromosome: Chromsome/contig name in FASTA reference to process (default: ALL)
+=item * sample: name of sample being processed, this will be prepended to the output filename if no output is provided.
 
-=item * threads: Number of threads to use (default: 4)
-
-=item * pindel: Full path to the Pindel application (required)
-
-=item * output: Prefix to prepend to Pindel output (default: pindel.output)
+=item * output: name of output file
 
 =back
 
 =cut
 
-sub run_pindel {
+sub call_pindel_somatic {
 	my $self = shift;
 	my %args = validated_hash(
 		\@_,
-		fasta => {
+		tumour => {
 			isa         => 'Str',
-			required    => 0,
-			default     => ''
+			required    => 1
 			},
-		bam_config => {
-			isa			=> 'Str',
-			required	=> 0,
-			default		=> ''
-			},
-		chromosome => {
-			isa			=> 'Str',
-			required	=> 0,
-			default		=> 'ALL'
-			},
-		threads => {
-			isa			=> 'Int',
-			required	=> 0,
-			default		=> 4
-			},
-		pindel => {
+		normal => {
 			isa			=> 'Str',
 			required	=> 1
+			},
+		sample => {
+			isa			=> 'Str',
+			required	=> 1,
 			},
 		output => {
 			isa			=> 'Str',
 			required	=> 0,
-			default		=> 'pindel.output'
+			default		=> ''
 			}
 		);
 
-	my $program = $args{'pindel'};
+	my $output;
+	if ('' eq $args{'output'}) {
+		$output = join('.',
+			$args{'sample'},
+			'pindel',
+			'somatic',
+			'tab'
+			);
+		}
+	else {
+		$output = $args{'output'};
+		}
+	open(my $output_fh, '>', $output);
 
-	my $options = join(' ',
-		'-f', $args{'fasta'},
-		'-i', $args{'bam_config'},
-		'-o', $args{'output'},
-		'-c', $args{'chromosome'},
-		'-T', $args{'threads'} 
-		);
+	# build a hash for the normal file with keys as varianttype_chr_start_end_bases
+	my %normal_pindel;
+	open(my $normal_fh, '<', $args{'normal'});
+	while(my $line = <$normal_fh>) {
+		$line =~ s/^\s+//;
+		$line =~ s/\s+$//;
 
-	my $cmd = join(' ',
-		$program,
-		$options
-		);
+		# skip the header line
+		next if ($line =~ m/^PINDEL_ID/);
+		my @input_line = split(/\t/, $line);
+		my $key = join('_',
+			$input_line[$pindel_tab{'VARIANT_TYPE'}],
+			$input_line[$pindel_tab{'CHR'}],
+			$input_line[$pindel_tab{'START'}],
+			$input_line[$pindel_tab{'END'}],
+			$input_line[$pindel_tab{'BASES'}]
+			);
+		$normal_pindel{$key} = '';
+		}
+	close($normal_fh);
 
+	# open the tumour file and build the same type of key (i.e. varianttype_chr_start_end_bases)
+	# and compare this key to the a key in the normal file, if the key exists,
+	# then skip it as this is a germline mutation.  If not then it's a somatic mutation
+	# and include it in the output file
+	open(my $tumour_fh, '<', $args{'tumour'});
+	while(my $line = <$tumour_fh>) {
+		$line =~ s/^\s+//;
+		$line =~ s/\s+$//;
+
+		# skip the header line
+		if ($line =~ m/^PINDEL_ID/) {
+			print {$output_fh} "$line\n";
+			next;
+			}
+		my @input_line = split(/\t/, $line);
+		next if ('reject' eq $self->filter_indel(indel => \@input_line));
+		my $key = join('_',
+			$input_line[$pindel_tab{'VARIANT_TYPE'}],
+			$input_line[$pindel_tab{'CHR'}],
+			$input_line[$pindel_tab{'START'}],
+			$input_line[$pindel_tab{'END'}],
+			$input_line[$pindel_tab{'BASES'}]
+			);
+
+		if (!exists($normal_pindel{$key})) {
+			print {$output_fh} "$line\n";
+			}
+		}
+	close($tumour_fh);
+	close($output_fh);
 	my %return_values = (
-		cmd => $cmd
+		output => $output
 		);
 
 	return(\%return_values);
 	}
 
-=head2 $obj->convert_pindel_output_to_vcf()
 
-Convert the output from a Pindel run to a VCF file.
+=head2 $obj->filter_indel()
+
+Filter a Pindel indel call.
 
 =head3 Arguments:
 
 =over 2
 
-=item * pindel_file: Name of Pindel file to process (required)
+=item * indel: Pindel call in tabular format
 
-=item * vcf: Name of output VCF file (default: none)
-
-=item * reference: FASTA reference genome (default: hg19.fa)
-
-=item * reference_name: formal name of reference genome defined in "referemce" (default: GRCh37)
-
-=item * reference_date: Release date of reference genome defined in "reference" (default: 200902)
-
-=item * chromosome: Name of chromosome to be processed, if none is provided all the chromosomes will be processed
-
-=item * pindel2vcf: full path to the pindel2vcf program (default: pindel2vcf, assumes pindel2vcf is in the path)
+=item * tissue: Normal or tumour tissue
 
 =back
 
 =cut
 
-sub convert_pindel_output_to_vcf {
+sub filter_indel {
 	my $self = shift;
 	my %args = validated_hash(
 		\@_,
-		pindel_file => {
-			isa         => 'Str',
+		indel => {
+			isa         => 'ArrayRef',
 			required    => 1
-			},
-		vcf => {
-			isa			=> 'Str',
-			required	=> 0,
-			default		=> ''
-			},
-		reference => {
-			isa			=> 'Str',
-			required	=> 0,
-			default		=> '/hpf/largeprojects/adam/ref_data/homosapiens/ucsc/GRCh37/fasta/genome.fa'
-			},
-		reference_name => {
-			isa			=> 'Str',
-			required	=> 0,
-			default		=> 'GRCh37'
-			},
-		reference_date => {
-			isa			=> 'Str',
-			required	=> 0,
-			default		=> '200902'
-			},
-		chromosome => {
-			isa			=> 'Str',
-			required	=> 0,
-			default		=> ''
-			},
-		pindel2vcf => {
-			isa			=> 'Str',
-			required	=> 0,
-			default		=> 'pindel2vcf'
 			}
 		);
 
-	my $output;
-	my $params = join(' ',
-		'--pindel_output', $args{'pindel_file'},
-		'--reference', $args{'reference'},
-		'--reference_name', $args{'reference_name'},
-		'--reference_date', $args{'reference_date'}
-		);
-
-	# if there is no vcf output file provided, Pindel appends '.vcf' to the input file provided
-	if ('' ne $args{'vcf'}) {
-		$params = join(' ',
-			'--vcf',
-			$args{'vcf'}
-			);
-		$output = $args{'vcf'};
+	my $indel = $args{'indel'};
+	my $filter_status;
+	if ($indel->[$pindel_tab{'VARIANT_LENGTH'}] > 1) {
+		$filter_status = 'reject'
 		}
 	else {
-		$output = join('.',
-			$args{'pindel_file'},
-			'vcf'
-			);
+		$filter_status = 'pass';
 		}
-
-	# if there is no chromosome, Pindel will process all chromosomes
-	if ('' ne $args{'chromosome'}) {
-		$params = join(' ',
-			'--chromosome',
-			$args{'chromosome'}
-			);
-		}
-
-	my $cmd = join(' ',
-		$args{'pindel2vcf'},
-		$params
-		);
-
-	my %return_values = (
-		cmd => $cmd,
-		output => $output
-		);
-
-	return(\%return_values);
+	return($filter_status);
 	}
 
 =head1 AUTHOR
@@ -230,7 +213,7 @@ automatically be notified of progress on your bug as I make changes.
 
 You can find documentation for this module with the perldoc command.
 
-    perldoc NGS::Tools::Pindel::Role
+    perldoc NGS::Tools::Pindel::Role::PindelPostprocessing
 
 You can also look for information at:
 
@@ -255,10 +238,6 @@ L<http://search.cpan.org/dist/test-test/>
 =back
 
 =head1 ACKNOWLEDGEMENTS
-
-Dr. Adam Shlien, PI - The Hospital for Sick Children
-
-Dr. Roland Arnold - The Hospital for Sick Children
 
 =head1 LICENSE AND COPYRIGHT
 
@@ -304,4 +283,4 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 no Moose::Role;
 
-1; # End of NGS::Tools::Pindel::Role
+1; # End of NGS::Tools::Pindel::Role::PindelPostprocessing

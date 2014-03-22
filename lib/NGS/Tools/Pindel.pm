@@ -4,7 +4,7 @@ use MooseX::Params::Validate;
 
 with 'NGS::Tools::Pindel::Role';
 with 'NGS::Tools::Pindel::Role::PindelParser';
-with 'NGS::Tools::Picard::CollectInsertSizeMetrics';
+with 'NGS::Tools::Pindel::Role::Postprocessing';
 
 use strict;
 use warnings FATAL => 'all';
@@ -15,11 +15,11 @@ use autodie;
 
 =head1 VERSION
 
-Version 0.02
+Version 0.03
 
 =cut
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 =head1 SYNOPSIS
 

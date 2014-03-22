@@ -5,7 +5,10 @@ WriteMakefile
   'PL_FILES' => {},
   'INSTALLDIRS' => 'site',
   'NAME' => 'NGS::Tools::Pindel',
-  'EXE_FILES' => [],
+  'EXE_FILES' => [
+                   'bin/call_pindel_filtered_somatics.pl',
+                   'bin/convert_pindel_to_table.pl'
+                 ],
   'VERSION_FROM' => 'lib/NGS/Tools/Pindel.pm',
   'PREREQ_PM' => {
                    'Moose::Role' => 0,

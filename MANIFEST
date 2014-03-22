@@ -1,17 +1,23 @@
+bin/call_pindel_filtered_somatics.pl
+bin/convert_pindel_to_table.pl
 Build.PL
 Changes
 lib/NGS/Tools/Pindel.pm
 lib/NGS/Tools/Pindel/Role.pm
 lib/NGS/Tools/Pindel/Role/PindelParser.pm
+lib/NGS/Tools/Pindel/Role/Postprocessing.pm
 Makefile.PL
 MANIFEST			This list of files
 META.json
 META.yml
 README
-bin/convert_pindel_to_table.pl
 t/01-run_pindel_role.t
 t/02-pindel2vcf.t
 t/03-pindel_parser.t
+t/04-pindel_somatic_caller.t
 t/example/03-expected_tab_file.txt
+t/example/04-pindel_somatic_expected.tab
+t/example/BT2012029.pindel.tab
+t/example/D1119.pindel.tab
 t/example/example_D
 t/example/example_SI

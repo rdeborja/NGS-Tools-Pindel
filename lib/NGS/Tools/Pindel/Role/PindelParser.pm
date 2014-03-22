@@ -50,7 +50,7 @@ sub create_pindel_tabular_file {
 			isa			=> 'Str',
 			required	=> 0,
 			default		=> 'pindel.tab'
-			}
+			},
 		sample => {
 			isa			=> 'Str',
 			required	=> 1
@@ -70,6 +70,7 @@ sub create_pindel_tabular_file {
 
 	return 0;
 	}
+
 =head2 $obj->parse_pindel_output()
 
 Parse the Pindel generated file.

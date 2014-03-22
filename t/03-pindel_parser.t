@@ -25,8 +25,8 @@ lives_ok
 	'Class instantiated';
 
 # create a temporary output file
-my $tempdir = File::Temp::tempdir(CLEANUP => 0, DIR => '.');
-my (undef, $tempfile) = File::Temp::tempfile(UNLINK => 0, DIR => $tempdir);
+my $tempdir = File::Temp::tempdir(CLEANUP => 1, DIR => '.');
+my (undef, $tempfile) = File::Temp::tempfile(UNLINK => 1, DIR => $tempdir);
 my $sample = 'test-sample';
 my @files = ("$Bin/example/example_D", "$Bin/example/example_SI");
 $pindel->create_pindel_tabular_file(

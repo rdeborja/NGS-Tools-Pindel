@@ -7,3 +7,6 @@ Revision history for NGS-Tools-Pindel
         Added Pindel deletion and small insertion file parser and converter
         to a tabular format for handling in R.
 
+0.03    2014-03-21
+        Added a somatic caller in the Postprocessing.pm Moose role.  This uses
+        minimal filtering (i.e. remove any indels greater than 1). 
