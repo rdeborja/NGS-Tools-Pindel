@@ -2,7 +2,7 @@ package NGS::Tools::Pindel;
 use Moose;
 use MooseX::Params::Validate;
 
-with 'NGS::Tools::Pindel::Role';
+with 'NGS::Tools::Pindel::Role::Pipeline';
 with 'NGS::Tools::Pindel::Role::PindelParser';
 with 'NGS::Tools::Pindel::Role::Postprocessing';
 
@@ -15,11 +15,11 @@ use autodie;
 
 =head1 VERSION
 
-Version 0.03
+Version 0.04
 
 =cut
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 =head1 SYNOPSIS
 

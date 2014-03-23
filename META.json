@@ -41,10 +41,7 @@
    "provides" : {
       "NGS::Tools::Pindel" : {
          "file" : "lib/NGS/Tools/Pindel.pm",
-         "version" : "0.03"
-      },
-      "NGS::Tools::Pindel::Role" : {
-         "file" : "lib/NGS/Tools/Pindel/Role.pm"
+         "version" : "0.04"
       },
       "NGS::Tools::Pindel::Role::PindelParser" : {
          "file" : "lib/NGS/Tools/Pindel/Role/PindelParser.pm"
@@ -59,5 +56,5 @@
          "http://www.perlfoundation.org/artistic_license_2_0"
       ]
    },
-   "version" : "0.03"
+   "version" : "0.04"
 }

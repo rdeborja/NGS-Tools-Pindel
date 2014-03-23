@@ -14,7 +14,7 @@ my $test_class_factory = MooseX::ClassCompositor->new(
 	);
 
 # create a temporary class based on the given Moose::Role package
-my $test_class = $test_class_factory->class_for('NGS::Tools::Pindel::Role');
+my $test_class = $test_class_factory->class_for('NGS::Tools::Pindel::Role::Pipeline');
 
 # instantiate the test class based on the given role
 my $pindel;
