@@ -1,11 +1,11 @@
 #!/usr/bin/perl
 
-### call_pindel_filtered_somatics.pl ##############################################################################
+### call_pindel_filtered_somatics.pl ##############################################################
 # Filter and call somatics on the Pindel tabular data.
 
 ### HISTORY #######################################################################################
 # Version       Date            Developer           Comments
-# 0.01
+# 0.01          2014-03-24      rdeborja            initial development
 
 ### INCLUDES ######################################################################################
 use warnings;

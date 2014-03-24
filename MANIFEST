@@ -3,8 +3,8 @@ bin/convert_pindel_to_table.pl
 Build.PL
 Changes
 lib/NGS/Tools/Pindel.pm
-lib/NGS/Tools/Pindel/Role.pm
 lib/NGS/Tools/Pindel/Role/PindelParser.pm
+lib/NGS/Tools/Pindel/Role/Pipeline.pm
 lib/NGS/Tools/Pindel/Role/Postprocessing.pm
 Makefile.PL
 MANIFEST			This list of files

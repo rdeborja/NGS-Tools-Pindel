@@ -1,10 +1,6 @@
-package NGS::Tools::Pindel;
-use Moose;
+package NGS::Tools::Pindel::Role::Preprocessing;
+use Moose::Role;
 use MooseX::Params::Validate;
-
-with 'NGS::Tools::Pindel::Role::Pipeline';
-with 'NGS::Tools::Pindel::Role::PindelParser';
-with 'NGS::Tools::Pindel::Role::Postprocessing';
 
 use strict;
 use warnings FATAL => 'all';
@@ -13,52 +9,79 @@ use autodie;
 
 =head1 NAME
 
-=head1 VERSION
-
-Version 0.05
-
-=cut
-
-our $VERSION = '0.05';
+NGS::Tools::Pindel::Role::Preprocessing
 
 =head1 SYNOPSIS
 
-A Perl Moose wrapper for Pindel.
-
-	use NGS::Tools::Pindel;
-
-	my  = NGS::Tools::Pindel->new();
-
-	...
+Preprocess data in preparation for the Pindel pipeline.
 
 =head1 ATTRIBUTES AND DELEGATES
 
-=cut
-
 =head1 SUBROUTINES/METHODS
 
-=head2 ->BUILD()
+=head2 $obj->create_pindel_bam_config_file()
 
-Post-constructor initialization (called automatically as part of new())
+Create the Pindel BAM config file by parsing the Picard
+CollectInsertSizeMetrics.jar output and outputting a Pindel
+compatible config file.  The BAM config file is a tab-separated
+text file containing:
+
+* Full path to BAM file
+* Mean insert size
+* sample name
 
 =head3 Arguments:
 
-=over2
+=over 2
 
-=item * : reference to hash of arguments
+=item * insertsize_file: Full path to the insert size metrics file (required)
+
+=item * output: name of output file
+
+=item * sample_name: name of sample being processed (required)
 
 =back
 
 =cut
 
-sub BUILD {
+sub create_pindel_bam_config_file {
 	my $self = shift;
-	my $args = shift;
+	my %args = validated_hash(
+		\@_,
+		insertsize_file => {
+			isa			=> 'Str',
+			required    => 1
+			},
+		output => {
+			isa			=> 'Str',
+			required	=> l0,
+			default		=> ''
+			},
+		sample_name => {
+			isa			=> 'Str',
+			required	=> 0,
+			default		=> ''
+			}
+		);
+
+
+
+	my %return_values = (
+
+		);
+
+	return(\%return_values);
 	}
 
 =head1 AUTHOR
 
 Richard de Borja, C<< <richard.deborja at sickkids.ca> >>
+
+=head1 ACKNOWLEDGEMENT
+
+Dr. Adam Shlien, PI -- The Hospital for Sick Children
+
+Dr. Roland Arnold -- The Hospital for Sick Children
 
 =head1 BUGS
 
@@ -70,7 +93,7 @@ automatically be notified of progress on your bug as I make changes.
 
 You can find documentation for this module with the perldoc command.
 
-    perldoc NGS::Tools::Pindel
+    perldoc NGS::Tools::Pindel::Role::Preprocessing
 
 You can also look for information at:
 
@@ -95,6 +118,10 @@ L<http://search.cpan.org/dist/test-test/>
 =back
 
 =head1 ACKNOWLEDGEMENTS
+
+Dr. Adam Shlien, PI - The Hospital for Sick Children
+
+Dr. Roland Arnold - The Hospital for Sick Children
 
 =head1 LICENSE AND COPYRIGHT
 
@@ -138,8 +165,6 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 =cut
 
-no Moose;
+no Moose::Role;
 
-__PACKAGE__->meta->make_immutable;
-
-1; # End of NGS::Tools::Pindel
+1; # End of NGS::Tools::Pindel::Role::Preprocessing

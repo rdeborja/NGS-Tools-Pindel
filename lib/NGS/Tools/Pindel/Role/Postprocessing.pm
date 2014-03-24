@@ -22,18 +22,19 @@ A Perl Moose role for postprocessing Pindel tabular output.
 
 our %pindel_tab = (
 	PINDEL_ID => 0,
-	VARIANT_TYPE => 1,
-	VARIANT_LENGTH => 2,
-	CHR => 3, 
-	START => 4, 
-	END => 5,
-	RANGE_START => 6,
-	RANGE_END => 7,
-	S1_SCORE => 8,
-	BASES => 9, 
-	SUM_MS => 10,
-	SV_SUPPORT_READS => 11,
-	SV_UNIQUE_SUPPORT_READS => 12
+	SAMPLE_NAME => 1,
+	VARIANT_TYPE => 2,
+	VARIANT_LENGTH => 3,
+	CHR => 4, 
+	START => 5, 
+	END => 6,
+	RANGE_START => 7,
+	RANGE_END => 8,
+	S1_SCORE => 9,
+	BASES => 10, 
+	SUM_MS => 11,
+	SV_SUPPORT_READS => 12,
+	SV_UNIQUE_SUPPORT_READS => 13
 	);
 
 =head1 SUBROUTINES/METHODS
