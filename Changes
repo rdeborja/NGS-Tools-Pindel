@@ -16,3 +16,6 @@ Revision history for NGS-Tools-Pindel
 
 0.05    2014-03-24
         Updated hash for somatic calls in Postprocessing.pm to include sample name.
+
+0.06    2014-03-25
+        Fixed conversion script, missing sample parameter.

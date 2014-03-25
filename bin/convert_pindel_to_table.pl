@@ -73,7 +73,8 @@ sub main {
         }
     $pindel->create_pindel_tabular_file(
         files => \@pindel_files,
-        output => $opts{'output'}
+        output => $opts{'output'},
+				sample => $opts{'sample'}
         );
 
 
