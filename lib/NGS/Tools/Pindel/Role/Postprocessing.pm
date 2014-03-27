@@ -81,6 +81,11 @@ sub call_pindel_somatic {
 			isa			=> 'Str',
 			required	=> 0,
 			default		=> ''
+			},
+		filter => {
+			isa			=> 'Str',
+			required	=> 0,
+			default		=> 'FALSE'
 			}
 		);
 
@@ -134,7 +139,11 @@ sub call_pindel_somatic {
 			next;
 			}
 		my @input_line = split(/\t/, $line);
-		next if ('reject' eq $self->filter_indel(indel => \@input_line));
+
+		# if filter is set to TRUE, run the filter method on the data
+		if ($args{'filter'} eq 'TRUE') {
+			next if ('reject' eq $self->filter_indel(indel => \@input_line));
+			}
 		my $key = join('_',
 			$input_line[$pindel_tab{'VARIANT_TYPE'}],
 			$input_line[$pindel_tab{'CHR'}],

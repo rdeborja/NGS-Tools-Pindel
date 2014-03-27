@@ -29,10 +29,6 @@ my $tempdir = File::Temp::tempdir(
 	CLEANUP => 1,
 	DIR => '.'
 	);
-my (undef, $tempfile) = File::Temp::tempfile(
-	UNLINK => 1,
-	DIR => $tempdir
-	);
 my (undef, $tempout) = File::Temp::tempfile(
 	UNLINK => 1,
 	DIR => $tempdir
