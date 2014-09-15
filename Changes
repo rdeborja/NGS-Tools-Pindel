@@ -21,4 +21,4 @@ Revision history for NGS-Tools-Pindel
         Fixed conversion script, missing sample parameter.
 
 0.07    2014-03-27
-        Added an option to pass a "filter" boolean argument to the method call_pindel_somatic.  If passed as 'TRUE' then apply filters to the indel call which is currently set to single base indels.  Default is no filtering.
+        Added an option to pass a "filter" argument to the method call_pindel_somatic.  If passed as 'TRUE' then apply filters to the indel call which is currently set to single base indels.  Default is no filtering.

@@ -5,6 +5,9 @@ use MooseX::Params::Validate;
 with 'NGS::Tools::Pindel::Role::Pipeline';
 with 'NGS::Tools::Pindel::Role::PindelParser';
 with 'NGS::Tools::Pindel::Role::Postprocessing';
+with 'NGS::Tools::Picard::CollectInsertSizeMetrics';
+with 'NGS::Tools::Picard::MetricsParser';
+with 'HPF::SGE::Role';
 
 use strict;
 use warnings FATAL => 'all';
@@ -35,6 +38,37 @@ A Perl Moose wrapper for Pindel.
 
 =cut
 
+=head2 $obj->java
+
+Full path to Java engine, required for Picard suite of tools.
+
+=cut
+
+has 'java' => (
+    is          => 'rw',
+    isa         => 'Str',
+    reader		=> 'get_java',
+    writer		=> 'set_java',
+    required	=> 0,
+    default		=> '/hpf/tools/centos/java/1.6.0'
+    );
+
+=head2 $obj->picard
+
+Full path to the directory containing the Picard suite of tools.
+
+=cut
+
+has 'picard' => (
+    is          => 'rw',
+    isa         => 'Str',
+    reader		=> 'get_picard',
+    writer		=> 'set_picard',
+    required	=> 0,
+    default		=> '/hpf/tools/centos/picard-tools/1.103'
+    );
+
+
 =head1 SUBROUTINES/METHODS
 
 =head2 ->BUILD()
@@ -54,6 +88,67 @@ Post-constructor initialization (called automatically as part of new())
 sub BUILD {
 	my $self = shift;
 	my $args = shift;
+	}
+
+=head2 $obj->generate_pindel_config_file()
+
+Description
+
+=head3 Arguments:
+
+=over 2
+
+=item * bam: full path to the BAM file for processing
+
+=back
+
+=cut
+
+sub generate_pindel_config_file {
+	my $self = shift;
+	my %args = validated_hash(
+		\@_,
+		bam => {
+			isa         => 'Str',
+			required    => 1
+			},
+		sample => {
+            isa         => 'Str',
+            required    => 1
+			},
+		java => {
+			isa			=> 'Str',
+			required	=> 0,
+			default		=> $self->get_java()
+			},
+		picard => {
+			isa			=> 'Str',
+			required	=> 0,
+			default		=> $self->get_picard()
+			}
+		);
+
+	my $output = join('.',
+		$args{'sample'},
+		'config'
+		);
+
+	my $insert_size_run = $self->CollectInsertSizeMetrics(
+		input => $args{'bam'},
+		java => $args{'java'},
+		picard => $args{'picard'}
+		);
+
+	my $insert_size_stats = $self->get_insert_size_summary_statistics(
+
+		);
+
+	my %return_values = (
+		insert_run => $insert_size_run,
+		insert_stats => $insert_size_stats
+		);
+
+	return(\%return_values);
 	}
 
 =head1 AUTHOR

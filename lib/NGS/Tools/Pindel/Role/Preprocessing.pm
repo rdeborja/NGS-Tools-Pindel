@@ -6,6 +6,7 @@ use strict;
 use warnings FATAL => 'all';
 use namespace::autoclean;
 use autodie;
+use File::Basename;
 
 =head1 NAME
 
@@ -34,7 +35,9 @@ text file containing:
 
 =over 2
 
-=item * insertsize_file: Full path to the insert size metrics file (required)
+=item * bam: name of input BAM file (required)
+
+=item * insertsize: Full path to the insert size metrics file (required)
 
 =item * output: name of output file
 
@@ -48,26 +51,52 @@ sub create_pindel_bam_config_file {
 	my $self = shift;
 	my %args = validated_hash(
 		\@_,
-		insertsize_file => {
+		bam => {
 			isa			=> 'Str',
+			required	=> 1
+			},
+		insertsize => {
+			isa			=> 'Int',
 			required    => 1
 			},
 		output => {
 			isa			=> 'Str',
-			required	=> l0,
+			required	=> 0,
 			default		=> ''
 			},
 		sample_name => {
 			isa			=> 'Str',
-			required	=> 0,
-			default		=> ''
+			required	=> 1
 			}
 		);
 
+	my $output_file;
+	if ($args{'output'} eq '') {
+		$output_file = join('.',
+			File::Basename::basename($args{'bam'}, qw(.bam)),
+			'pindel',
+			'config'
+			);
+		}
+	else {
+		$output_file = $args{'output'}
+		}
 
+	my %output_pindel_config = (
+		file		=> $args{'bam'},
+		insertsize	=> $args{'insertsize'},
+		sample		=> $args{'sample_name'}
+		);
+	open(my $output_fh, '>', $output_file);
+	print {$output_fh} join("\t",
+		$output_pindel_config{'file'},
+		$output_pindel_config{'insertsize'},
+		$output_pindel_config{'sample'}
+		), "\n";
+	close($output_fh);
 
 	my %return_values = (
-
+		output => $output_file
 		);
 
 	return(\%return_values);

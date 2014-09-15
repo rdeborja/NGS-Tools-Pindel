@@ -25,7 +25,8 @@ my $builder = Module::Build->new(
         'Moose::Role'                   => 0,
         'MooseX::Params::Validate'      => 0,
         'autodie'                       => 0,
-        'namespace::autoclean'          => 0
+        'namespace::autoclean'          => 0,
+        'NGS::Tools::Picard'            => 0.06
     },
     add_to_cleanup     => [ 'NGS-Tools-Pindel-*' ],
     create_makefile_pl => 'traditional',

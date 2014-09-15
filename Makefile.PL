@@ -20,6 +20,7 @@ WriteMakefile
                    'autodie' => 0,
                    'MooseX::Params::Validate' => 0,
                    'Test::Files' => 0,
+                   'NGS::Tools::Picard' => '0.03',
                    'MooseX::ClassCompositor' => 0
                  }
 )
