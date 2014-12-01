@@ -33,7 +33,7 @@
          "requires" : {
             "Moose::Role" : "0",
             "MooseX::Params::Validate" : "0",
-            "NGS::Tools::Picard" : "0.03",
+            "NGS::Tools::Picard" : "0.06",
             "autodie" : "0",
             "namespace::autoclean" : "0"
          }

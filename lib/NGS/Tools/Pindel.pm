@@ -7,7 +7,6 @@ with 'NGS::Tools::Pindel::Role::PindelParser';
 with 'NGS::Tools::Pindel::Role::Postprocessing';
 with 'NGS::Tools::Picard::CollectInsertSizeMetrics';
 with 'NGS::Tools::Picard::MetricsParser';
-with 'HPF::SGE::Role';
 
 use strict;
 use warnings FATAL => 'all';

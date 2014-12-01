@@ -73,7 +73,8 @@ sub create_pindel_tabular_file {
 
 =head2 $obj->parse_pindel_output()
 
-Parse the Pindel generated file.
+Parse the Pindel generated file.  At this point, we're only interestedin the short insertions
+(_SI) and deletions (_D) files.
 
 =head3 Arguments:
 
@@ -106,6 +107,17 @@ sub parse_pindel_output {
 			required	=> 1
 			}
 		);
+	my $is_deletion;
+	my $is_insertion;
+	if ($args{'file'} =~ m/_D$/) {
+		$is_deletion = 'TRUE';
+		}
+	elsif ($args{'file'} =~ m/_SI$/) {
+		$is _insertion = 'TRUE';
+		}
+	else {
+		die("Invalid filename, must end in either _SI or _D");
+		}
 	my $ofh = $args{'output'};
 	open(my $fh, '<', $args{'file'});
 	while(my $line = <$fh>) {
@@ -173,6 +185,39 @@ sub parse_pindel_output {
 	return 0;
 	}
 
+
+=head2 $obj->get_reference_sequence()
+
+Obtain the reference sequence.  For insertions, get the preceeding base and for deletions
+get the lowercase sequence in the below the main line.
+
+=head3 Arguments:
+
+=over 2
+
+=item * arg: argument
+
+=back
+
+=cut
+
+sub get_reference_sequence {
+	my $self = shift;
+	my %args = validated_hash(
+		\@_,
+		arg => {
+			isa         => 'Str',
+			required    => 0,
+			default     => ''
+			}
+		);
+
+	my %return_values = (
+
+		);
+
+	return(\%return_values);
+	}
 
 =head2 $obj->print_header()
 

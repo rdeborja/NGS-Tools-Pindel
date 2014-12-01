@@ -2,26 +2,27 @@
 use ExtUtils::MakeMaker;
 WriteMakefile
 (
-  'PL_FILES' => {},
-  'INSTALLDIRS' => 'site',
   'NAME' => 'NGS::Tools::Pindel',
-  'EXE_FILES' => [
-                   'bin/call_pindel_filtered_somatics.pl',
-                   'bin/convert_pindel_to_table.pl'
-                 ],
   'VERSION_FROM' => 'lib/NGS/Tools/Pindel.pm',
   'PREREQ_PM' => {
-                   'Moose::Role' => 0,
-                   'namespace::autoclean' => 0,
-                   'Test::Exception' => 0,
                    'FindBin' => 0,
-                   'Test::More' => 0,
-                   'Test::Moose' => 0,
-                   'autodie' => 0,
+                   'Moose::Role' => 0,
+                   'MooseX::ClassCompositor' => 0,
                    'MooseX::Params::Validate' => 0,
+                   'NGS::Tools::Picard' => '0.06',
+                   'Test::Exception' => 0,
                    'Test::Files' => 0,
-                   'NGS::Tools::Picard' => '0.03',
-                   'MooseX::ClassCompositor' => 0
-                 }
+                   'Test::Moose' => 0,
+                   'Test::More' => 0,
+                   'autodie' => 0,
+                   'namespace::autoclean' => 0
+                 },
+  'INSTALLDIRS' => 'site',
+  'EXE_FILES' => [
+                   'bin/call_pindel_filtered_somatics.pl',
+                   'bin/convert_pindel_to_table.pl',
+                   'bin/create_pindel_config.pl'
+                 ],
+  'PL_FILES' => {}
 )
 ;
