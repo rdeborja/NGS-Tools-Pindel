@@ -3,40 +3,37 @@ abstract: 'NGS::Tools::Pindel Perl wrapper'
 author:
   - 'Richard de Borja <richard.deborja@sickkids.ca>'
 build_requires:
-  FindBin: 0
-  MooseX::ClassCompositor: 0
-  Test::Exception: 0
-  Test::Files: 0
-  Test::Moose: 0
-  Test::More: 0
+  FindBin: '0'
+  MooseX::ClassCompositor: '0'
+  Test::Exception: '0'
+  Test::Files: '0'
+  Test::Moose: '0'
+  Test::More: '0'
 configure_requires:
-  Module::Build: 0
+  Module::Build: '0'
 dynamic_config: 1
-generated_by: 'Module::Build version 0.4205, CPAN::Meta::Converter version 2.120921'
-license: artistic_2
+generated_by: 'Module::Build version 0.421, CPAN::Meta::Converter version 2.143240'
+license: unknown
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
-  version: 1.4
+  version: '1.4'
 name: NGS-Tools-Pindel
 provides:
   NGS::Tools::Pindel:
     file: lib/NGS/Tools/Pindel.pm
-    version: 0.07
+    version: '0.07'
   NGS::Tools::Pindel::Role::PindelParser:
     file: lib/NGS/Tools/Pindel/Role/PindelParser.pm
-    version: 0
   NGS::Tools::Pindel::Role::Pipeline:
     file: lib/NGS/Tools/Pindel/Role/Pipeline.pm
-    version: 0
   NGS::Tools::Pindel::Role::Postprocessing:
     file: lib/NGS/Tools/Pindel/Role/Postprocessing.pm
-    version: 0
+  NGS::Tools::Pindel::Role::Preprocessing:
+    file: lib/NGS/Tools/Pindel/Role/Preprocessing.pm
 requires:
-  Moose::Role: 0
-  MooseX::Params::Validate: 0
-  NGS::Tools::Picard: 0.06
-  autodie: 0
-  namespace::autoclean: 0
-resources:
-  license: http://www.perlfoundation.org/artistic_license_2_0
-version: 0.07
+  Moose::Role: '0'
+  MooseX::Params::Validate: '0'
+  NGS::Tools::Picard: '0.06'
+  autodie: '0'
+  namespace::autoclean: '0'
+version: '0.07'

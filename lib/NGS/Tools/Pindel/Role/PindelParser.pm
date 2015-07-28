@@ -113,7 +113,7 @@ sub parse_pindel_output {
 		$is_deletion = 'TRUE';
 		}
 	elsif ($args{'file'} =~ m/_SI$/) {
-		$is _insertion = 'TRUE';
+		$is_insertion = 'TRUE';
 		}
 	else {
 		die("Invalid filename, must end in either _SI or _D");

@@ -4,9 +4,9 @@
       "Richard de Borja <richard.deborja@sickkids.ca>"
    ],
    "dynamic_config" : 1,
-   "generated_by" : "Module::Build version 0.4205",
+   "generated_by" : "Module::Build version 0.421",
    "license" : [
-      "artistic_2"
+      "unknown"
    ],
    "meta-spec" : {
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
@@ -52,13 +52,11 @@
       },
       "NGS::Tools::Pindel::Role::Postprocessing" : {
          "file" : "lib/NGS/Tools/Pindel/Role/Postprocessing.pm"
+      },
+      "NGS::Tools::Pindel::Role::Preprocessing" : {
+         "file" : "lib/NGS/Tools/Pindel/Role/Preprocessing.pm"
       }
    },
    "release_status" : "stable",
-   "resources" : {
-      "license" : [
-         "http://www.perlfoundation.org/artistic_license_2_0"
-      ]
-   },
    "version" : "0.07"
 }

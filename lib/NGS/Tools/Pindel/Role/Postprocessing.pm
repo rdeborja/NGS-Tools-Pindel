@@ -21,21 +21,21 @@ A Perl Moose role for postprocessing Pindel tabular output.
 =cut
 
 our %pindel_tab = (
-	PINDEL_ID => 0,
-	SAMPLE_NAME => 1,
-	VARIANT_TYPE => 2,
-	VARIANT_LENGTH => 3,
-	CHR => 4, 
-	START => 5, 
-	END => 6,
-	RANGE_START => 7,
-	RANGE_END => 8,
-	S1_SCORE => 9,
-	BASES => 10, 
-	SUM_MS => 11,
-	SV_SUPPORT_READS => 12,
-	SV_UNIQUE_SUPPORT_READS => 13
-	);
+    PINDEL_ID => 0,
+    SAMPLE_NAME => 1,
+    VARIANT_TYPE => 2,
+    VARIANT_LENGTH => 3,
+    CHR => 4, 
+    START => 5, 
+    END => 6,
+    RANGE_START => 7,
+    RANGE_END => 8,
+    S1_SCORE => 9,
+    BASES => 10, 
+    SUM_MS => 11,
+    SV_SUPPORT_READS => 12,
+    SV_UNIQUE_SUPPORT_READS => 13
+    );
 
 =head1 SUBROUTINES/METHODS
 
@@ -62,108 +62,108 @@ tumour.
 =cut
 
 sub call_pindel_somatic {
-	my $self = shift;
-	my %args = validated_hash(
-		\@_,
-		tumour => {
-			isa         => 'Str',
-			required    => 1
-			},
-		normal => {
-			isa			=> 'Str',
-			required	=> 1
-			},
-		sample => {
-			isa			=> 'Str',
-			required	=> 1,
-			},
-		output => {
-			isa			=> 'Str',
-			required	=> 0,
-			default		=> ''
-			},
-		filter => {
-			isa			=> 'Str',
-			required	=> 0,
-			default		=> 'FALSE'
-			}
-		);
+    my $self = shift;
+    my %args = validated_hash(
+        \@_,
+        tumour => {
+            isa         => 'Str',
+            required    => 1
+            },
+        normal => {
+            isa         => 'Str',
+            required    => 1
+            },
+        sample => {
+            isa         => 'Str',
+            required    => 1,
+            },
+        output => {
+            isa         => 'Str',
+            required    => 0,
+            default     => ''
+            },
+        filter => {
+            isa         => 'Str',
+            required    => 0,
+            default     => 'FALSE'
+            }
+        );
 
-	my $output;
-	if ('' eq $args{'output'}) {
-		$output = join('.',
-			$args{'sample'},
-			'pindel',
-			'somatic',
-			'tab'
-			);
-		}
-	else {
-		$output = $args{'output'};
-		}
-	open(my $output_fh, '>', $output);
+    my $output;
+    if ('' eq $args{'output'}) {
+        $output = join('.',
+            $args{'sample'},
+            'pindel',
+            'somatic',
+            'tab'
+            );
+        }
+    else {
+        $output = $args{'output'};
+        }
+    open(my $output_fh, '>', $output);
 
-	# build a hash for the normal file with keys as varianttype_chr_start_end_bases
-	my %normal_pindel;
-	open(my $normal_fh, '<', $args{'normal'});
-	while(my $line = <$normal_fh>) {
-		$line =~ s/^\s+//;
-		$line =~ s/\s+$//;
+    # build a hash for the normal file with keys as varianttype_chr_start_end_bases
+    my %normal_pindel;
+    open(my $normal_fh, '<', $args{'normal'});
+    while(my $line = <$normal_fh>) {
+        $line =~ s/^\s+//;
+        $line =~ s/\s+$//;
 
-		# skip the header line
-		next if ($line =~ m/^PINDEL_ID/);
-		my @input_line = split(/\t/, $line);
-		my $key = join('_',
-			$input_line[$pindel_tab{'VARIANT_TYPE'}],
-			$input_line[$pindel_tab{'CHR'}],
-			$input_line[$pindel_tab{'START'}],
-			$input_line[$pindel_tab{'END'}],
-			$input_line[$pindel_tab{'BASES'}]
-			);
-		$normal_pindel{$key} = '';
-		}
-	close($normal_fh);
+        # skip the header line
+        next if ($line =~ m/^PINDEL_ID/);
+        my @input_line = split(/\t/, $line);
+        my $key = join('_',
+            $input_line[$pindel_tab{'VARIANT_TYPE'}],
+            $input_line[$pindel_tab{'CHR'}],
+            $input_line[$pindel_tab{'START'}],
+            $input_line[$pindel_tab{'END'}],
+            $input_line[$pindel_tab{'BASES'}]
+            );
+        $normal_pindel{$key} = '';
+        }
+    close($normal_fh);
 
-	# open the tumour file and build the same type of key (i.e. varianttype_chr_start_end_bases)
-	# and compare this key to the a key in the normal file, if the key exists,
-	# then skip it as this is a germline mutation.  If not then it's a somatic mutation
-	# and include it in the output file
-	open(my $tumour_fh, '<', $args{'tumour'});
-	while(my $line = <$tumour_fh>) {
-		$line =~ s/^\s+//;
-		$line =~ s/\s+$//;
+    # open the tumour file and build the same type of key (i.e. varianttype_chr_start_end_bases)
+    # and compare this key to the a key in the normal file, if the key exists,
+    # then skip it as this is a germline mutation.  If not then it's a somatic mutation
+    # and include it in the output file
+    open(my $tumour_fh, '<', $args{'tumour'});
+    while(my $line = <$tumour_fh>) {
+        $line =~ s/^\s+//;
+        $line =~ s/\s+$//;
 
-		# skip the header line
-		if ($line =~ m/^PINDEL_ID/) {
-			print {$output_fh} "$line\n";
-			next;
-			}
-		my @input_line = split(/\t/, $line);
+        # skip the header line
+        if ($line =~ m/^PINDEL_ID/) {
+            print {$output_fh} "$line\n";
+            next;
+            }
+        my @input_line = split(/\t/, $line);
 
-		# if filter is set to TRUE, run the filter method on the data
-		if ($args{'filter'} eq 'TRUE') {
-			next if ('reject' eq $self->filter_indel(indel => \@input_line));
-			}
-		my $key = join('_',
-			$input_line[$pindel_tab{'VARIANT_TYPE'}],
-			$input_line[$pindel_tab{'CHR'}],
-			$input_line[$pindel_tab{'START'}],
-			$input_line[$pindel_tab{'END'}],
-			$input_line[$pindel_tab{'BASES'}]
-			);
+        # if filter is set to TRUE, run the filter method on the data
+        if ($args{'filter'} eq 'TRUE') {
+            next if ('reject' eq $self->filter_indel(indel => \@input_line));
+            }
+        my $key = join('_',
+            $input_line[$pindel_tab{'VARIANT_TYPE'}],
+            $input_line[$pindel_tab{'CHR'}],
+            $input_line[$pindel_tab{'START'}],
+            $input_line[$pindel_tab{'END'}],
+            $input_line[$pindel_tab{'BASES'}]
+            );
 
-		if (!exists($normal_pindel{$key})) {
-			print {$output_fh} "$line\n";
-			}
-		}
-	close($tumour_fh);
-	close($output_fh);
-	my %return_values = (
-		output => $output
-		);
-
-	return(\%return_values);
-	}
+        if (!exists($normal_pindel{$key})) {
+            print {$output_fh} "$line\n";
+            }
+        }
+    close($tumour_fh);
+    close($output_fh);
+    my %return_values = (
+        output => $output
+        );
+    
+    return(\%return_values);
+    }
 
 
 =head2 $obj->filter_indel()
@@ -183,25 +183,35 @@ Filter a Pindel indel call.
 =cut
 
 sub filter_indel {
-	my $self = shift;
-	my %args = validated_hash(
-		\@_,
-		indel => {
-			isa         => 'ArrayRef',
-			required    => 1
-			}
-		);
-
-	my $indel = $args{'indel'};
-	my $filter_status;
-	if ($indel->[$pindel_tab{'VARIANT_LENGTH'}] > 1) {
-		$filter_status = 'reject'
-		}
-	else {
-		$filter_status = 'pass';
-		}
-	return($filter_status);
-	}
+    my $self = shift;
+    my %args = validated_hash(
+        \@_,
+        indel => {
+            isa         => 'ArrayRef',
+            required    => 1
+            },
+        filter_length => {
+            isa         => 'Int',
+            required    => 0,
+            default     => 1
+            },
+        filter_sum_ms => {
+            isa         => 'Int',
+            required    => 0,
+            default     => 250
+            }
+        );
+    
+    my $indel = $args{'indel'};
+    my $filter_status;
+    if (($indel->[$pindel_tab{'VARIANT_LENGTH'}] <= $args{'filter_length'}) && ($indel->[$pindel_tab{'SUM_MS'}] >= $args{'filter_sum_ms'})) {
+        $filter_status = 'pass'
+        }
+    else {
+        $filter_status = 'reject';
+        }
+    return($filter_status);
+    }
 
 =head1 AUTHOR
 

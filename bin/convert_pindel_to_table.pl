@@ -68,7 +68,7 @@ sub main {
     my @pindel_files;
     foreach my $file (@files) {
         next unless($file =~ m/_D$/ | $file =~ m/_SI$/);
-        next unless($file =~ m/^$opts{'sample'}/);
+        next unless($file =~ m/$opts{'sample'}/);
         push(@pindel_files, join('/', $opts{'dir'}, $file));
         }
     $pindel->create_pindel_tabular_file(
