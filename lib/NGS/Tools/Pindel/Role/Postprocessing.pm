@@ -213,6 +213,90 @@ sub filter_indel {
     return($filter_status);
     }
 
+=head2 $obj->convert_pindel_to_vcf()
+
+Convert the Pindel output to VCF format.
+
+=head3 Arguments:
+
+=over 2
+
+=item * pindel: Pindel output file prefix to convert to VCF format.
+
+=item * program: full path to the pindel2vcf program (default: pindel2vcf)
+
+=item * reference: full path to the reference genome used in the alignment (default: hs37d5.fa)
+
+=item * reference_name: name of the reference used, this is for annotation purposes (default: hs37d5.fa)
+
+=item * reference_date: date of the vers of the reference genome used (default:)
+
+=back
+
+=cut
+
+sub convert_pindel_to_vcf {
+    my $self = shift;
+    my %args = validated_hash(
+        \@_,
+        pindel => {
+            isa         => 'Str',
+            required    => 1
+            },
+        output => {
+            isa         => 'Str',
+            required    => 1
+            },
+        program => {
+            isa         => 'Str',
+            required    => 0,
+            default     => 'pindel2vcf'
+            },
+        reference => {
+            isa         => 'Str',
+            required    => 0,
+            default     => '/hpf/largeprojects/adam/local/reference/homosapiens/ucsc/hs37d5/fasta/hs37d5.fa'
+            },
+        reference_name => {
+            isa         => 'Str',
+            required    => 0,
+            default     => 'hs37d5'
+            },
+        reference_date => {
+            isa         => 'Str',
+            required    => 0,
+            default     => "2011-07-11"
+            },
+        );
+
+    my $output;
+    if ($args{'output'} !~ m/\.vcf$/) {
+        $output = join('.', $args{'output'}, 'vcf');
+        }
+    else {
+        $output = $args{'output'}
+        }
+    my $program = $args{'program'};
+    my $options = join(' ',
+        '-P', $args{'pindel'},
+        '-r', $args{'reference'},
+        '-R', $args{'reference_name'},
+        '-d', $args{'reference_date'},
+        '--vcf', $output
+        );
+    my $cmd = join(' ',
+        $program,
+        $options
+        );
+
+    my %return_values = (
+        cmd => $cmd,
+        output => $output
+        );
+
+    return(\%return_values);
+    }
+
 =head1 AUTHOR
 
 Richard de Borja, C<< <richard.deborja at sickkids.ca> >>
