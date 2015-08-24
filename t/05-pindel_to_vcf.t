@@ -1,4 +1,4 @@
-use Test::More tests => 1;
+use Test::More tests => 2;
 use Test::Moose;
 use Test::Exception;
 use MooseX::ClassCompositor;
@@ -18,6 +18,7 @@ my $test_class = $test_class_factory->class_for('NGS::Tools::Pindel::Role::Postp
 
 # instantiate the test class based on the given role
 my $pindel;
+my $pindel_prefix = "$Bin/example/example";
 lives_ok
     {
         $pindel = $test_class->new();
@@ -25,7 +26,16 @@ lives_ok
     'Class instantiated';
 
 my $pindel_vcf = $pindel->convert_pindel_to_vcf(
-    pindel => 'test',
+    pindel => $pindel_prefix,
     output => 'test_output'
     );
-print Dumper($pindel_vcf);
+
+my $expected_cmd = join(' ',
+    'pindel2vcf',
+    "-P $Bin/example/example",
+    '-r /hpf/largeprojects/adam/local/reference/homosapiens/ucsc/hs37d5/fasta/hs37d5.fa',
+    '-R hs37d5',
+    '-d 2011-07-11',
+    '--vcf test_output.vcf'
+    );
+is($expected_cmd, $pindel_vcf->{'cmd'}, 'Command matches expected');
